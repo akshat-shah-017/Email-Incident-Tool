@@ -1,0 +1,74 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production Build
+dist/
+build/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Prisma
+prisma/migrations/**/migration_lock.toml
+
+# Uploads
+uploads/
+temp/
+
+# Debug
+.npm
+.eslintcache
+.node_repl_history
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional npm cache
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Yarn
+.yarn-integrity
+
+# dotenv environment variables file
+.env.test
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Testing
+.nyc_output
+
+# Miscellaneous
+*.pem

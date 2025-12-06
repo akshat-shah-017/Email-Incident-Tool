@@ -1,0 +1,86 @@
+// Prisma Schema for Email Incident Tool
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Incident record representing a processed email
+model Incident {
+  /// Unique auto-incremented incident ID (primary key)
+  id          Int       @id @default(autoincrement()) @map("incident_id")
+  
+  /// Email subject/title
+  subject     String    @db.VarChar(500)
+  
+  /// Sender's display name
+  senderName  String?   @map("sender_name") @db.VarChar(255)
+  
+  /// Sender's email address
+  senderEmail String    @map("sender_email") @db.VarChar(255)
+  
+  /// Date/time the email was received
+  receivedAt  DateTime  @map("received_at") @db.Timestamptz
+  
+  /// Date/time the incident was logged in the system
+  loggedAt    DateTime  @default(now()) @map("logged_at") @db.Timestamptz
+  
+  /// AI-generated summary of the email content
+  summary     String?   @db.Text
+  
+  /// Full email body text (HTML cleaned to readable format)
+  bodyText    String    @map("body_text") @db.Text
+  
+  /// Raw email file content (optional, for reference)
+  rawEml      String?   @map("raw_eml") @db.Text
+  
+  /// Original filename of the uploaded email
+  fileName    String?   @map("file_name") @db.VarChar(255)
+  
+  /// File type (.msg or .eml)
+  fileType    String?   @map("file_type") @db.VarChar(10)
+  
+  /// Indicates if summarization was successful
+  summarized  Boolean   @default(false)
+  
+  /// Error message if processing failed
+  errorMessage String?  @map("error_message") @db.Text
+
+  /// Priority level: high, medium, low, or null (unassigned)
+  priority     String?  @db.VarChar(10)
+
+  /// Completion status: complete or incomplete (default)
+  status       String   @default("incomplete") @db.VarChar(20)
+  
+  /// Date/time when the incident was marked as complete
+  completedAt  DateTime? @map("completed_at") @db.Timestamptz
+  
+  /// Notes added when marking as complete
+  completionNotes String? @map("completion_notes") @db.Text
+
+  /// Indexes for faster searching
+  @@index([senderEmail])
+  @@index([receivedAt])
+  @@index([loggedAt])
+  @@index([subject])
+  @@index([priority])
+  @@index([status])
+  
+  @@map("incidents")
+}
+
+/// System configuration and metadata
+model SystemConfig {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique @db.VarChar(100)
+  value     String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("system_config")
+}
