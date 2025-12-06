@@ -15,6 +15,11 @@ import { httpLogStream, ensureDir } from './utils';
 export async function createApp(): Promise<Application> {
     const app = express();
 
+    // Trust proxy for Render/Railway (behind reverse proxy)
+    if (config.isProduction) {
+        app.set('trust proxy', 1);
+    }
+
     // Ensure upload directory exists
     await ensureDir(path.resolve(config.uploadDir));
 
