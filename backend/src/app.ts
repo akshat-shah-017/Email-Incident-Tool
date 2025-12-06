@@ -23,9 +23,26 @@ export async function createApp(): Promise<Application> {
         crossOriginResourcePolicy: { policy: 'cross-origin' },
     }));
 
-    // CORS configuration
+    // CORS configuration - support multiple origins
     app.use(cors({
-        origin: config.corsOrigin,
+        origin: (origin, callback) => {
+            // Allow requests with no origin (mobile apps, curl, etc)
+            if (!origin) return callback(null, true);
+
+            // Check if origin is in allowed list or matches Vercel pattern
+            const allowedOrigins = config.corsOrigins;
+            const isAllowed = allowedOrigins.some(allowed => {
+                if (allowed === '*') return true;
+                if (allowed.includes('vercel.app') && origin.includes('vercel.app')) return true;
+                return origin === allowed;
+            });
+
+            if (isAllowed) {
+                callback(null, true);
+            } else {
+                callback(null, true); // Allow all in production for now
+            }
+        },
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,

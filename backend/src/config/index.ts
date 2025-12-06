@@ -26,8 +26,9 @@ export const config = {
         baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     },
 
-    // CORS
+    // CORS - support multiple origins (comma-separated) or wildcard
     corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    corsOrigins: (process.env.CORS_ORIGIN || 'http://localhost:3000').split(',').map(o => o.trim()),
 
     // File Upload
     maxFileSizeMB: parseInt(process.env.MAX_FILE_SIZE_MB || '10', 10),
